@@ -21,7 +21,7 @@ def get_winner(user_choice, computer_choice):
 
     return outcomes[user_choice][computer_choice]
 
-def RPS():
+def rock_paper_scissors():
     input("Welcome to Rock, Paper, Scissors! Press Enter to begin.")
     print("Please choose either rock, paper, or scissors.")
 
@@ -41,4 +41,4 @@ def RPS():
     print(winner)
 
 
-RPS()
+rock_paper_scissors()
