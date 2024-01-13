@@ -1,27 +1,51 @@
-import json
 import random
+import json
 
-with open('words.json') as f:
-    words = json.load(f)
+with open('words.json') as user_file:
+    file_contents = user_file.read()
+    words = json.loads(file_contents)
 
-random_word = random.choice(words['data'])
+def get_valid_word(words):
+    word = random.choice(words)
 
-def hang_man():
-    counter = 0
-    print('random word will be generated')
-    length_of_word = len(random_word)
-    print(f'word length is {length_of_word}')
-    print(f'you have {length_of_word} chances to guess the word')
-    
-    while counter < length_of_word:
-        user_input = input('enter a letter\n')
-        
-        if user_input in random_word:
-            print('correct')
-            
+    while '-' in word or ' ' in word:
+        word = random.choice(words)
+
+    return word.upper()
+
+def hangman():
+    word = get_valid_word(words)
+    word_letters = set(word)
+    alphabet = set('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    used_letters = set()
+
+    lives = 6
+
+    while len(word_letters) > 0 and lives > 0:
+        print('You have', lives, 'lives left and you have used these letters: ', ' '.join(used_letters))
+
+        word_list = [letter if letter in used_letters else '-' for letter in word]
+        print('Current word: ', ' '.join(word_list))
+
+        user_letter = input('Guess a letter: ').upper()
+
+        if user_letter in alphabet - used_letters:
+            used_letters.add(user_letter)
+
+            if user_letter in word_letters:
+                word_letters.remove(user_letter)
+
+            else:
+                lives = lives - 1
+                print('Letter is not in word.')
+
+        elif user_letter in used_letters:
+            print('You have already used that character. Please try again.')
+
         else:
-            print('wrong')
-            counter += 1
+            print('Invalid character. Please try again.')
 
-
-hang_man()
+    if lives == 0:
+        print('You died, sorry. The word was', word)
+    else:
+        print('You guessed the word', word, '!!')
